@@ -1,6 +1,4 @@
-git submodule init
-git submodule update
-
+#!/bin/bash
 OS=`uname`
 
 if [[ $OS == 'Linux' ]]; then
@@ -12,10 +10,22 @@ else
     exit 1
 fi
 
-# skynet
-cd skynet && make clean && make ${PLAT} && cd -
+# do action
+action=$1
 
-# clibs
-cd luaclib && cargo build --release
-ln -s ./target/release/libjson.dylib ./bin/json.so
-cd -
+if [ "$action" = "skynet" ]; then
+    git submodule init
+    git submodule update
+    cd skynet && make clean && make ${PLAT} && cd -
+    echo "done"
+elif [ "$action" = "clibs" ]; then
+    cd luaclib
+    cargo build --release
+    cd bin
+    ln -sf ../target/release/libjson.dylib ./json.so
+    cd ../..
+    echo "done"
+else
+    echo "Usage: $0 {skynet|clibs}"
+    exit 1
+fi
