@@ -1,0 +1,11 @@
+luaclib/target
+*.so
+*.dll
+*.dylib
+*.exe
+*.o
+*.a
+*.obj
+
+.DS_Store
+.vscode/

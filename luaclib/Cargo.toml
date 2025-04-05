@@ -1,0 +1,12 @@
+[package]
+name = "luaclib"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "json"
+path = "src/json.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+mlua = { version = "0.10", features = ["lua54", "module"] }
