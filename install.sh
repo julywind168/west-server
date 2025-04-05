@@ -17,5 +17,5 @@ cd skynet && make clean && make ${PLAT} && cd -
 
 # clibs
 cd luaclib && cargo build --release
-ln -s ./target/release/libjson.dylib ./target/bin/json.so
+ln -s ./target/release/libjson.dylib ./bin/json.so
 cd -
