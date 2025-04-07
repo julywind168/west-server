@@ -186,9 +186,19 @@ function echo.new()
 
         -- TODO: add more response type
         local handler = chain_middleware(cb)
-        local ok, err = pcall(handler, c)
-        if not ok then
-            skynet.error(string.format('Handle method: "%s", path: "%s", client: "%s" error: %s', method, path, addr, err))
+        local ok, r = pcall(handler, c)
+        if ok then
+            if r then
+                if type(r) == "string" then
+                    c.string(http.StatusOK, r)
+                elseif type(r) == "table" then
+                    c.json(http.StatusOK, r)
+                else
+                    error(string.format("Invalid response: %s", tostring(r)))
+                end
+            end
+        else
+            skynet.error(string.format('Handle method: "%s", path: "%s", client: "%s" error: %s', method, path, addr, r))
             return ret(http.StatusInternalServerError)
         end
         c.response.header["Date"] = format_http_date()
