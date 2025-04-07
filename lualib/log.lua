@@ -12,6 +12,9 @@ local log = {
 }
 
 local function report(level, fmt, ...)
+    if not service_addr then
+        log.init()
+    end
     local msg
     if type(fmt) == "string" and string.match(fmt, "%%[dfsqxXaA]") then -- fmt?
         msg = string.format(fmt, ...)
