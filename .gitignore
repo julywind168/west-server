@@ -9,3 +9,6 @@ luaclib/target
 
 .DS_Store
 .vscode/
+
+config/mongo-*.lua
+!config/mongo-game-sample.lua

@@ -1,0 +1,94 @@
+local skynet = require "skynet"
+local service = require "skynet.service"
+
+local mongox = {}; mongox.__index = mongox
+
+function mongox:find_one(...)
+    return skynet.call(self.service_addr, "lua", "find_one", ...)
+end
+
+function mongox:find_many(...)
+    return skynet.call(self.service_addr, "lua", "find_many", ...)
+end
+
+function mongox:count(...)
+    return skynet.call(self.service_addr, "lua", "count", ...)
+end
+
+function mongox:sum(...)
+    return skynet.call(self.service_addr, "lua", "sum", ...)
+end
+
+-- use self.request
+function mongox:insert_one(...)
+    return self.request(self.service_addr, "lua", "insert_one", ...)
+end
+
+function mongox:insert_many(...)
+    return self.request(self.service_addr, "lua", "insert_many", ...)
+end
+
+function mongox:update_one(...)
+    return self.request(self.service_addr, "lua", "update_one", ...)
+end
+
+function mongox:update_many(...)
+    return self.request(self.service_addr, "lua", "update_many", ...)
+end
+
+function mongox:delete_one(...)
+    return self.request(self.service_addr, "lua", "delete_one", ...)
+end
+
+function mongox:delete_many(...)
+    return self.request(self.service_addr, "lua", "delete_many", ...)
+end
+
+function mongox:update(...)
+    return self.request(self.service_addr, "lua", "update", ...)
+end
+
+function mongox:update_or_insert(...)
+    return self.request(self.service_addr, "lua", "update_or_insert", ...)
+end
+
+function mongox.init(opts)
+    local self = {
+        name = assert(opts.name),
+        request = opts.async and skynet.send or skynet.call,
+        poolsize = opts.poolsize or 1,
+    }
+
+    skynet.init(function ()
+        local function mongox_service(name, poolsize)
+            local skynet = require "skynet"
+            local service = require "skynet.service"
+            local worker_service = require "mongox.worker"
+
+            local wrokers = {}
+            local idx = 0
+            local function get_worker()
+                idx = idx + 1
+                if idx > poolsize then
+                    idx = 1
+                end
+                return wrokers[idx]
+            end
+
+            skynet.start(function()
+                for i = 1, poolsize do
+                    wrokers[i] = service.new(("mongo-%s-worker-%d"):format(name, i), worker_service, name, i)
+                end
+                skynet.dispatch("lua", function(session, source, ...)
+                    skynet.redirect(get_worker(), source, "lua", session, skynet.pack(...))
+                    skynet.ignoreret()
+                end)
+            end)
+        end
+        self.service_addr = service.new("mongo-"..self.name, mongox_service, self.name, self.poolsize)
+    end)
+
+    return setmetatable(self, mongox)
+end
+
+return mongox
