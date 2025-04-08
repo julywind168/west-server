@@ -8,7 +8,12 @@ local log = {
     LEVEL_DEBUG = 2,
     LEVEL_INFO = 3,
     LEVEL_WARN = 4,
-    LEVEL_ERROR = 5
+    LEVEL_ERROR = 5,
+
+    config = {
+        level = 1, -- TRACE
+        color = true
+    }
 }
 
 local function report(level, fmt, ...)
@@ -54,43 +59,51 @@ function log.error(...)
 end
 
 ---@class LogConfig
----@field level number
----@field color boolean
+---@field level number|nil
+---@field color boolean|nil
 
 --- @param conf LogConfig|nil
 --- @return self
 function log.init(conf)
-    skynet.init(function ()
-        local log_service = function (conf)
-            local skynet = require "skynet"
-            local log_level = conf and conf.level or 1 -- TRACE
-            local enable_color = conf and conf.color == false and false or true -- default to true
-
-            local tags = { "TRACE", "DEBUG", "INFO", "WARN", "ERROR" }
-            local color_tags = {
-                "\27[36mTRACE\27[0m",
-                "\27[32mDEBUG\27[0m",
-                "\27[37mINFO\27[0m",
-                "\27[33mWARN\27[0m",
-                "\27[31mERROR\27[0m"
-            }
-
-            local function log(level, msg)
-                if level >= log_level then
-                    skynet.error(string.format("%s %s", enable_color and color_tags[level] or tags[level], msg))
-                end
-            end
-
-            skynet.start(function()
-                skynet.dispatch("lua", function(_,_, ...)
-                    log(...)
-                end)
-            end)
+    if conf then
+        if conf.level then
+            log.config.level = conf.level
         end
-
-        service_addr = service.new("log", log_service, conf)
-    end)
+        if conf.color then
+            log.config.color = conf.color
+        end
+    end
     return log
 end
+
+skynet.init(function ()
+    local log_service = function (conf)
+        local skynet = require "skynet"
+        local log_level = conf and conf.level or 1 -- TRACE
+        local enable_color = conf and conf.color == false and false or true -- default to true
+
+        local tags = { "TRACE", "DEBUG", "INFO", "WARN", "ERROR" }
+        local color_tags = {
+            "\027[90mTRACE\027[0m", -- Gray (bright black)
+            "\027[34mDEBUG\027[0m", -- Blue
+            "\027[32mINFO\027[0m",  -- Green
+            "\027[33mWARN\027[0m",  -- Yellow
+            "\027[31mERROR\027[0m"  -- Red
+        }
+
+        local function log(level, msg)
+            if level >= log_level then
+                skynet.error(string.format("%s %s", enable_color and color_tags[level] or tags[level], msg))
+            end
+        end
+
+        skynet.start(function()
+            skynet.dispatch("lua", function(_,_, ...)
+                log(...)
+            end)
+        end)
+    end
+    service_addr = service.new("log", log_service, log.config)
+end)
 
 return log

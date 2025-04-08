@@ -1,7 +1,7 @@
 local skynet = require "skynet"
 local server = require "config"
 local json = require "json"
-local log = require "log".init()
+local log = require "log"
 
 
 skynet.start(function()
@@ -14,14 +14,15 @@ skynet.start(function()
 
     skynet.error(json.encode({a = 1, hell = "world", b = {1, 2, 3}}, true))
 
-    log.info("test log info")
-    log.error("test log error id:%d", 123)
+    log.trace("test log trace")
     log.debug("test log debug")
+    log.info("test log info id:%d", 123)
     log.warn("test log warn", {
         hello = "world",
         a = 1,
         b = {1, 2, 3},
     })
+    log.error("test error info")
 
     skynet.exit()
 end)
