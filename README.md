@@ -5,10 +5,10 @@ A skynet distributed server template
 Please install rust first.
 ```bash
 ./install.sh skynet
-./install.sh clibs
+./install.sh libs
 ```
 
-# Run
+# Test
 ```bash
 ./run.sh
 ```
