@@ -6,7 +6,6 @@ local uuid = require "uuid"
 
 
 skynet.start(function()
-    math.randomseed(tonumber(tostring(os.time()):reverse()))
     skynet.error("=============================================")
     skynet.error(os.date("%Y/%m/%d %H:%M:%S ")..server.name.." start")
     skynet.error("=============================================")
