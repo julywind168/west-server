@@ -2,6 +2,7 @@ local skynet = require "skynet"
 local server = require "config"
 local json = require "json"
 local log = require "log"
+local uuid = require "uuid"
 
 
 skynet.start(function()
@@ -23,6 +24,9 @@ skynet.start(function()
         b = {1, 2, 3},
     })
     log.error("test error info")
+
+    log.info("test uuid v4", uuid.v4())
+    log.info("test uuid v7", uuid.v7())
 
     skynet.exit()
 end)

@@ -1,0 +1,11 @@
+[package]
+name = "uuid"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+mlua = { version = "0.10", features = ["lua54", "module"] }
+uuid = { version = "1.16", features = ["v4", "v7"] }

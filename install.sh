@@ -18,14 +18,15 @@ if [ "$action" = "skynet" ]; then
     git submodule update
     cd skynet && make clean && make ${PLAT} && cd -
     echo "done"
-elif [ "$action" = "clibs" ]; then
+elif [ "$action" = "libs" ]; then
     cd luaclib
     cargo build --release
     cd bin
     ln -sf ../target/release/libjson.dylib ./json.so
+    ln -sf ../target/release/libuuid.dylib ./uuid.so
     cd ../..
     echo "done"
 else
-    echo "Usage: $0 {skynet|clibs}"
+    echo "Usage: $0 {skynet|libs}"
     exit 1
 fi
