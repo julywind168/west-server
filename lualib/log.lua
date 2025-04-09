@@ -1,19 +1,20 @@
 local skynet = require "skynet"
 local json = require "json"
 
-local log_level = tonumber(skynet.getenv "log_level")
-local log_color = skynet.getenv "log_color" == "true"
+local LOG_LEVEL = tonumber(skynet.getenv "log_level")
+local ENABLE_COLOR = skynet.getenv("log_color") == "true"
+local ENABLE_LOCATION = skynet.getenv("log_location") == "true"
 
 local log = {
-    LEVEL_TRACE = 1,
-    LEVEL_DEBUG = 2,
-    LEVEL_INFO = 3,
-    LEVEL_WARN = 4,
-    LEVEL_ERROR = 5
+    TRACE = 1,
+    DEBUG = 2,
+    INFO = 3,
+    WARN = 4,
+    ERROR = 5
 }
 
-local tags = { "TRACE", "DEBUG", "INFO", "WARN", "ERROR" }
-local color_tags = {
+local TAGS = { "TRACE", "DEBUG", "INFO", "WARN", "ERROR" }
+local COLOR_TAGS = {
     "\027[90mTRACE\027[0m", -- Gray (bright black)
     "\027[34mDEBUG\027[0m", -- Blue
     "\027[32mINFO\027[0m",  -- Green
@@ -21,47 +22,56 @@ local color_tags = {
     "\027[31mERROR\027[0m"  -- Red
 }
 
-local function report(level, fmt, ...)
-    if level < log_level then
+local function log_message(level, fmt, ...)
+    if level < LOG_LEVEL then
         return
     end
+
     local msg
-    if type(fmt) == "string" and string.match(fmt, "%%[dfsqxXaA]") then -- fmt?
+    if type(fmt) == "string" and string.match(fmt, "%%[dfsqxXaA]") then
         msg = string.format(fmt, ...)
     else
         local args = {fmt, ...}
-        for index, value in ipairs(args) do
-            if type(value) == "table" then
-                local str = json.encode(value)
-                args[index] = #str <= 100 and str or json.encode(value, true)
+        for i, v in ipairs(args) do
+            if type(v) == "table" then
+                local str = json.encode(v)
+                args[i] = #str <= 100 and str or json.encode(v, true)
             else
-                args[index] = tostring(value)
+                args[i] = tostring(v)
             end
         end
         msg = table.concat(args, ", ")
     end
-    skynet.error(string.format("%s %s", log_color and color_tags[level] or tags[level], msg))
+
+    if ENABLE_LOCATION then
+        local info = debug.getinfo(3)
+        if info then
+            local filename = string.match(info.short_src, "[^/%.]+%.lua")
+            msg = string.format("[%s:%d] %s", filename, info.currentline, msg)
+        end
+    end
+
+    skynet.error(string.format("%s %s", ENABLE_COLOR and COLOR_TAGS[level] or TAGS[level], msg))
 end
 
 function log.trace(...)
-    report(log.LEVEL_TRACE, ...)
+    log_message(log.TRACE, ...)
 end
 
 function log.debug(...)
-    report(log.LEVEL_DEBUG, ...)
+    log_message(log.DEBUG, ...)
 end
 
 function log.info(...)
-    report(log.LEVEL_INFO, ...)
+    log_message(log.INFO, ...)
 end
 
 function log.warn(...)
-    report(log.LEVEL_WARN, ...)
+    log_message(log.WARN, ...)
 end
 
 function log.error(...)
-    report(log.LEVEL_ERROR, ...)
+    log_message(log.ERROR, ...)
 end
-
 
 return log
