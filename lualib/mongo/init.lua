@@ -3,6 +3,12 @@ local service = require "skynet.service"
 
 local mongo = {}; mongo.__index = mongo
 
+function mongo.newarray(t)
+    t = t or {}
+    t.__array = true
+    return t
+end
+
 function mongo:find_one(...)
     return skynet.call(self.service_addr, "lua", "find_one", ...)
 end

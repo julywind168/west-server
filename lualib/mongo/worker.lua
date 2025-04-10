@@ -16,6 +16,27 @@ local function worker_service(name, id)
         end
     end
 
+    local array_mt = {}
+
+    function array_mt:__len()
+        return rawlen(self)
+    end
+
+    local function normalize(doc)
+        for key, value in pairs(doc) do
+            if type(value) == "table" then
+                doc[key] = normalize(value)
+            end
+        end
+        if doc.__array then
+            doc.__array = nil
+            return setmetatable(doc, array_mt)
+        else
+            return doc
+        end
+    end
+
+
     local function init()
         client = mongo.client(conf.conf)
         db = client[conf.db_name]
@@ -28,11 +49,11 @@ local function worker_service(name, id)
     local command = {}
 
     function command.insert_one(coll, doc)
-        return db[coll]:safe_insert(doc)
+        return db[coll]:safe_insert(normalize(doc))
     end
 
     function command.insert_many(coll, docs)
-        return db[coll]:safe_batch_insert(docs)
+        return db[coll]:safe_batch_insert(normalize(docs))
     end
 
     function command.delete_one(coll, query)
