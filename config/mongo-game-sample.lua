@@ -10,10 +10,11 @@ return {
 		username = "USERNAME",
 		password = "PASSWORD",
 	},
+	-- one_index: { { key1 = 1}, { key2 = 1 },  unique = true }
 	indexes = {
 		users = {
-			{id = "hashed"},
-			{account = 1}
+			{{id = "hashed"}, unique = true},
+			{{account = 1}, {time = -1}}
 		}
 	}
 }

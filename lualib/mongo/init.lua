@@ -1,58 +1,58 @@
 local skynet = require "skynet"
 local service = require "skynet.service"
 
-local mongox = {}; mongox.__index = mongox
+local mongo = {}; mongo.__index = mongo
 
-function mongox:find_one(...)
+function mongo:find_one(...)
     return skynet.call(self.service_addr, "lua", "find_one", ...)
 end
 
-function mongox:find_many(...)
+function mongo:find_many(...)
     return skynet.call(self.service_addr, "lua", "find_many", ...)
 end
 
-function mongox:count(...)
+function mongo:count(...)
     return skynet.call(self.service_addr, "lua", "count", ...)
 end
 
-function mongox:sum(...)
+function mongo:sum(...)
     return skynet.call(self.service_addr, "lua", "sum", ...)
 end
 
 -- use self.request
-function mongox:insert_one(...)
+function mongo:insert_one(...)
     return self.request(self.service_addr, "lua", "insert_one", ...)
 end
 
-function mongox:insert_many(...)
+function mongo:insert_many(...)
     return self.request(self.service_addr, "lua", "insert_many", ...)
 end
 
-function mongox:update_one(...)
+function mongo:update_one(...)
     return self.request(self.service_addr, "lua", "update_one", ...)
 end
 
-function mongox:update_many(...)
+function mongo:update_many(...)
     return self.request(self.service_addr, "lua", "update_many", ...)
 end
 
-function mongox:delete_one(...)
+function mongo:delete_one(...)
     return self.request(self.service_addr, "lua", "delete_one", ...)
 end
 
-function mongox:delete_many(...)
+function mongo:delete_many(...)
     return self.request(self.service_addr, "lua", "delete_many", ...)
 end
 
-function mongox:update(...)
+function mongo:update(...)
     return self.request(self.service_addr, "lua", "update", ...)
 end
 
-function mongox:update_or_insert(...)
+function mongo:update_or_insert(...)
     return self.request(self.service_addr, "lua", "update_or_insert", ...)
 end
 
-function mongox.init(opts)
+function mongo.init(opts)
     local self = {
         name = assert(opts.name),
         request = opts.async and skynet.send or skynet.call,
@@ -63,7 +63,7 @@ function mongox.init(opts)
         local function mongox_service(name, poolsize)
             local skynet = require "skynet"
             local service = require "skynet.service"
-            local worker_service = require "mongox.worker"
+            local worker_service = require "mongo.worker"
 
             local wrokers = {}
             local idx = 0
@@ -88,7 +88,7 @@ function mongox.init(opts)
         self.service_addr = service.new("mongo-"..self.name, mongox_service, self.name, self.poolsize)
     end)
 
-    return setmetatable(self, mongox)
+    return setmetatable(self, mongo)
 end
 
-return mongox
+return mongo
