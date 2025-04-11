@@ -1,8 +1,8 @@
 local skynet = require "skynet"
 local json = require "json"
 
+local DAEMON = skynet.getenv("daemon")
 local LOG_LEVEL = tonumber(skynet.getenv "log_level")
-local ENABLE_COLOR = skynet.getenv("log_color") == "true"
 local ENABLE_LOCATION = skynet.getenv("log_location") == "true"
 
 local log = {
@@ -51,7 +51,7 @@ local function log_message(level, fmt, ...)
         end
     end
 
-    skynet.error(string.format("%s %s", ENABLE_COLOR and COLOR_TAGS[level] or TAGS[level], msg))
+    skynet.error(string.format("%s %s", DAEMON and TAGS[level] or COLOR_TAGS[level], msg))
 end
 
 function log.trace(...)

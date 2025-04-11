@@ -7,6 +7,9 @@ luaclib/target
 *.a
 *.obj
 
+*.log
+skynet.pid
+
 .DS_Store
 .vscode/
 
