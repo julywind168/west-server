@@ -8,7 +8,7 @@ local function profile(f, n)
     for i = 1, n do
         f()
     end
-    return ((skynet.now() - t) / 100).." s"
+    return ((skynet.now() - t) / 100).."s"
 end
 
 local t = {
