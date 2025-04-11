@@ -11,18 +11,9 @@ skynet.start(function()
     skynet.error("=============================================")
 
     skynet.newservice("debug_console", 8000)
+    skynet.newservice("benchmark")
 
-    skynet.error(json.encode({a = 1, hell = "world", b = {1, 2, 3}}, true))
-
-    log.trace("test log trace")
-    log.debug("test log debug")
-    log.info("test log info id:%d", 123)
-    log.warn("test log warn", {
-        hello = "world",
-        a = 1,
-        b = {1, 2, 3},
-    })
-    log.error("test error info")
+    log.debug(json.encode({a = 1, hello = "world"}, true))
 
     log.info("test uuid v4", uuid.v4())
     log.info("test uuid v7", uuid.v7())
