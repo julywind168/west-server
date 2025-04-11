@@ -1,7 +1,7 @@
 local skynet = require "skynet"
 local server = require "config"
 local json = require "json"
-local log = require "log"
+local log = require "west.log"
 local uuid = require "uuid"
 
 

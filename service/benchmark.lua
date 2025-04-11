@@ -1,7 +1,7 @@
 local skynet = require "skynet"
 local json = require "json"
-local luajson = require "luajson"
-local log = require "log"
+local luajson = require "lua-json"
+local log = require "west.log"
 
 local function profile(f, n)
     local t = skynet.now()
