@@ -15,9 +15,10 @@ A skynet distributed server template
     * log: 日志库
     * mongo: 支持连接池, 支持 mongo empty array
     * echo: golang echo 风格的 web 框架
+    * list: 函数式风格 table 扩展
     * ...
 
-4. 函数式风格 table(list) 扩展
+4. simple service sandbox, 参考 service/simple/ping.lua 即可便捷的更新服务的状态或接口
 
 ## Build
 Please install rust first.

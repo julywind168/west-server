@@ -40,7 +40,7 @@ local function log_message(level, fmt, ...)
                 args[i] = tostring(v)
             end
         end
-        msg = table.concat(args, ", ")
+        msg = table.concat(args, " ")
     end
 
     if ENABLE_LOCATION then

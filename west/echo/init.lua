@@ -5,8 +5,8 @@ local httpd = require "http.httpd"
 local socket = require "skynet.socket"
 local sockethelper = require "http.sockethelper"
 local urllib = require "http.url"
-local json = require "cjson"
-local http = require "echo.http"
+local json = require "json"
+local http = require "west.echo.http"
 
 local BODY_LIMIT = 8192
 
@@ -143,6 +143,8 @@ function echo.new()
         method = method:lower()
 
         local path, query = urllib.parse(url)
+        query = query and urllib.parse_query(query) or {}
+
         if not handle[method] then
             skynet.error(string.format("method %s not allowed", method))
             return ret(http.StatusMethodNotAllowed)
@@ -171,6 +173,8 @@ function echo.new()
                 body = "",
             },
         }
+
+        setmetatable(c, {__index = c.request})
 
         function c.string(rcode, rbody)
             c.response.status = rcode

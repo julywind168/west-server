@@ -13,7 +13,7 @@ end
 
 function ping:ping()
     self.count = self.count + 1
-    log.info("ping:ping", self.count)
+    log.info("ping:", self.count)
     return "pong"
 end
 

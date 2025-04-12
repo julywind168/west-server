@@ -1,8 +1,9 @@
 local skynet = require "skynet"
 local server = require "config"
 local json = require "json"
-local log = require "west.log"
 local uuid = require "uuid"
+local log = require "west.log"
+local echo = require "west.echo"
 
 
 skynet.start(function()
@@ -14,6 +15,7 @@ skynet.start(function()
 
     -- test hotfix
     -- rlwrap nc 127.0.0.1 8000
+    -- list
     -- inject [ping_addr] hotfix/fix_ping.lua
     local ping = skynet.newservice("simple", "ping")
 
@@ -29,6 +31,23 @@ skynet.start(function()
 
     log.info("test uuid v4", uuid.v4())
     log.info("test uuid v7", uuid.v7())
+
+    -- test echo
+    local e = echo.new()
+
+    e.get("/", function (c)
+        return "hello world"
+    end)
+
+    e.get("/user/query", function (c)
+        local user = {
+            name = c.query.name or "anonymous",
+            age = 18
+        }
+        return user
+    end)
+
+    e.start(":8887")
 
     -- skynet.exit()
 end)
