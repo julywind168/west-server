@@ -11,7 +11,6 @@ skynet.start(function()
     skynet.error("=============================================")
 
     skynet.newservice("debug_console", 8000)
-    skynet.newservice("benchmark")
 
     -- test hotfix
     -- rlwrap nc 127.0.0.1 8000
