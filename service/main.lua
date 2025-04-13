@@ -1,53 +1,53 @@
 local skynet = require "skynet"
+local cluster = require "skynet.cluster"
 local server = require "config"
-local json = require "json"
-local uuid = require "uuid"
-local log = require "west.log"
-local echo = require "west.echo"
+local west = require "west"
+local nodes = require "config.nodes"
+
+local nodename = skynet.getenv "nodename"
+local distributed = nodename ~= nil
+
+
+local startup = {}
+
+function startup.ping()
+    west.spawn("ping", "ping")
+
+    if distributed then
+        cluster.open "ping"
+        skynet.exit()
+    end
+end
+
+function startup.main()
+    local ping = distributed and "ping@ping" or "ping"
+    skynet.fork(function()
+        while true do
+            skynet.sleep(200)
+            west.send(ping, "ping")
+        end
+    end)
+    west.spawn("test", "test")
+
+    if distributed then
+        cluster.open "main"
+        skynet.exit()
+    end
+end
 
 
 skynet.start(function()
     skynet.error("=============================================")
-    skynet.error(os.date("%Y/%m/%d %H:%M:%S ")..server.name.." start")
+    skynet.error(os.date("%Y/%m/%d %H:%M:%S ")..(nodename or server.name).." start")
     skynet.error("=============================================")
 
-    skynet.newservice("debug_console", 8000)
+    skynet.newservice("debug_console", nodes[nodename or "main"].debug_port)
 
-    -- test hotfix
-    -- rlwrap nc 127.0.0.1 8000
-    -- list
-    -- inject [ping_addr] hotfix/fix_ping.lua
-    local ping = skynet.newservice("simple", "ping")
-
-    skynet.fork(function()
-        while true do
-            skynet.sleep(200)
-            skynet.send(ping, "lua", "ping")
-        end
-    end)
-
-
-    log.debug(json.encode({a = 1, hello = "world"}, true))
-
-    log.info("test uuid v4", uuid.v4())
-    log.info("test uuid v7", uuid.v7())
-
-    -- test echo
-    local e = echo.new()
-
-    e.get("/", function (c)
-        return "hello world"
-    end)
-
-    e.get("/user/query", function (c)
-        local user = {
-            name = c.query.name or "anonymous",
-            age = 18
-        }
-        return user
-    end)
-
-    e.start(":8887")
-
-    -- skynet.exit()
+    if distributed then -- cluster mode
+        cluster.reload(nodes.conf)
+        startup[nodename]()
+    else
+        startup.ping()
+        startup.main()
+    end
 end)

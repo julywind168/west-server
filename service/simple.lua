@@ -1,5 +1,7 @@
 local skynet = require "skynet"
-local raw_exit = skynet.exit
+local west = require "west"
+local skynet_exit = skynet.exit
+
 
 local args = { ... }
 local S = require("service.simple." .. args[1])
@@ -13,7 +15,7 @@ end
 
 function skynet.exit()
     try("stopped")
-    raw_exit()
+    skynet_exit()
 end
 
 skynet.start(function()
@@ -25,5 +27,6 @@ skynet.start(function()
             f(S, ...)
         end
     end)
-    try("started", table.unpack(args, 2))
+    west.init(args[2]) -- set self name
+    try("started", table.unpack(args, 3))
 end)

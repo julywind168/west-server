@@ -2,7 +2,7 @@
 A skynet distributed server template
 
 ## Features
-1. 一套代码, 相同的启动脚本, 相同的代码, 可以做到随时在单机和集群模式之间的切换。
+1. 相同的启动脚本, 相同的代码, 配合 west api 可以做到随时在单机和集群模式之间的切换。
     * 单机模式: 用于开发时使用。
     * 集群模式: 用于生产时使用。(在开发时, 如有需要, 可以将项目复制多份来模拟集群模式)
 
@@ -20,8 +20,12 @@ A skynet distributed server template
 
 4. simple service sandbox, 参考 service/simple/ping.lua 即可便捷的更新服务的状态或接口
 
+## Install
+1. rust
+2. rlwrap
+3. nc
+
 ## Build
-Please install rust first.
 ```bash
 ./install.sh skynet
 ./install.sh libs
@@ -30,4 +34,11 @@ Please install rust first.
 ## Test
 ```bash
 ./start.sh
+```
+
+## Test Hotfix
+```bash
+rlwrap nc 127.0.0.1 {DEBUG_PORT}
+list
+inject [ping_addr] hotfix/fix_ping.lua
 ```
