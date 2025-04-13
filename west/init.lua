@@ -9,7 +9,7 @@ local west = {
 
 function west.spawn(name, sname, ...)
     skynet.newservice("simple", sname, name, ...)
-    return name
+    return nodename and nodename.."@"..name or name
 end
 
 -- fullname: node@name | name

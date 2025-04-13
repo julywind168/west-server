@@ -1,7 +1,10 @@
+local skynet = require "skynet"
 local uuid = require "uuid"
 local json = require "json"
 local log = require "west.log"
 local echo = require "west.echo"
+local west = require "west"
+local distributed = skynet.getenv "nodename" ~= nil
 
 
 local test = {}
@@ -30,6 +33,15 @@ function test.started()
     end)
 
     e.start(":8887")
+
+    -- test ping
+    local ping = distributed and "ping@ping" or "ping"
+    skynet.fork(function()
+        while true do
+            skynet.sleep(200)
+            west.send(ping, "ping")
+        end
+    end)
 end
 
 

@@ -12,7 +12,6 @@ local startup = {}
 
 function startup.ping()
     west.spawn("ping", "ping")
-
     if distributed then
         cluster.open "ping"
         skynet.exit()
@@ -20,15 +19,7 @@ function startup.ping()
 end
 
 function startup.main()
-    local ping = distributed and "ping@ping" or "ping"
-    skynet.fork(function()
-        while true do
-            skynet.sleep(200)
-            west.send(ping, "ping")
-        end
-    end)
     west.spawn("test", "test")
-
     if distributed then
         cluster.open "main"
         skynet.exit()

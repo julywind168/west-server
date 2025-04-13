@@ -42,3 +42,8 @@ rlwrap nc 127.0.0.1 {DEBUG_PORT}
 list
 inject [ping_addr] hotfix/fix_ping.lua
 ```
+
+## Test Distributed
+1. cp -rf west-server w2
+2. cd w2 && ./start.sh -n ping
+3. cd west-server && ./start.sh -n main
