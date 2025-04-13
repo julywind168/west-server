@@ -1,4 +1,4 @@
-local http = require "echo.http"
+local http = require "west.echo.http"
 
 ---@class (exact) CORSConfig
 ---@field allow_origins string[] 允许的来源
