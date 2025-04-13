@@ -66,7 +66,7 @@ function mongo.init(opts)
     }
 
     skynet.init(function ()
-        local function mongox_service(name, poolsize)
+        local function mongo_service(name, poolsize)
             local skynet = require "skynet"
             local service = require "skynet.service"
             local worker_service = require "mongo.worker"
@@ -91,7 +91,7 @@ function mongo.init(opts)
                 end)
             end)
         end
-        self.service_addr = service.new("mongo-"..self.name, mongox_service, self.name, self.poolsize)
+        self.service_addr = service.new("mongo-"..self.name, mongo_service, self.name, self.poolsize)
     end)
 
     return setmetatable(self, mongo)
