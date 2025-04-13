@@ -49,5 +49,6 @@ skynet.start(function()
     else
         startup.ping()
         startup.main()
+        skynet.exit()
     end
 end)
