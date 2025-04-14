@@ -205,7 +205,7 @@ function echo.new()
             skynet.error(string.format('Handle method: "%s", path: "%s", client: "%s" error: %s', method, path, addr, r))
             return ret(http.StatusInternalServerError)
         end
-        c.response.header["Date"] = format_http_date()
+        c.response.header["date"] = format_http_date()
         return ret(c.response.status, c.response.body, c.response.header)
     end
 
@@ -225,7 +225,7 @@ function echo.new()
         end)
     end
 
-    function server.startTLS(uri, certfile, keyfile)
+    function server.start_tls(uri, certfile, keyfile)
         server.protocol = "https"
         server.certfile = certfile
         server.keyfile = keyfile

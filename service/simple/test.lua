@@ -4,6 +4,7 @@ local json = require "json"
 local log = require "west.log"
 local echo = require "west.echo"
 local west = require "west"
+local middleware = require "west.echo.middleware"
 local distributed = skynet.getenv "nodename" ~= nil
 
 
@@ -19,6 +20,12 @@ function test.started()
 
     -- test echo
     local e = echo.new()
+
+    e.use(middleware.cors_with_config({
+        allow_origins = {"*"},
+        allow_methods = {"*"},
+        allow_headers = {"*"},
+    }))
 
     e.get("/", function (c)
         return "hello world"
