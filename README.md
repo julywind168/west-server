@@ -4,7 +4,7 @@ A skynet distributed server template
 ## Features
 1. 相同的启动脚本, 相同的代码, 配合 west api 可以做到随时在单机和集群模式之间的切换。
     * 单机模式: 用于开发时使用。
-    * 集群模式: 用于生产时使用。(在开发时, 如有需要, 可以将项目复制多份来模拟集群模式)
+    * 集群模式: 用于生产时使用。
 
 2. 使用 rust 来编写 native lua libs
     * 统一的编译的方式, 告别 各种 c/cpp 乱七八糟的 Makefile
@@ -44,6 +44,8 @@ inject [ping_addr] hotfix/fix_ping.lua
 ```
 
 ## Test Distributed
-1. cp -rf west-server w2
-2. cd w2 && ./start.sh -n ping
-3. cd west-server && ./start.sh -n main
+开发时, 如果需要在 daemon 模式下模拟 集群模式, 需要复制项目 (原因: skynet.pid log ... 会冲突)
+```bash
+./start.sh -n ping
+./start.sh -n main (another terminal)
+```
