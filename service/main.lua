@@ -20,6 +20,7 @@ end
 
 function startup.main()
     west.spawn("test", "test")
+    -- west.spawn("test2", "test_db")
     if distributed then
         cluster.open "main"
         skynet.exit()

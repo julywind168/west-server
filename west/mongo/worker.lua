@@ -1,6 +1,3 @@
-local skynet = require "skynet"
-local service = require "skynet.service"
-
 local function worker_service(name, id)
     local skynet = require "skynet"
     local mongo = require "skynet.db.mongo"

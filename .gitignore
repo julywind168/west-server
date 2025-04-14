@@ -15,3 +15,6 @@ skynet.pid
 
 config/mongo-*.lua
 !config/mongo-game-sample.lua
+
+config/redis-*.lua
+!config/redis-game-sample.lua

@@ -58,6 +58,13 @@ function mongo:update_or_insert(...)
     return self.request(self.service_addr, "lua", "update_or_insert", ...)
 end
 
+---@class MongoOpts
+---@field name string
+---@field async boolean?
+---@field poolsize number?
+
+---@param opts MongoOpts
+---@return self
 function mongo.init(opts)
     local self = {
         name = assert(opts.name),
@@ -69,7 +76,7 @@ function mongo.init(opts)
         local function mongo_service(name, poolsize)
             local skynet = require "skynet"
             local service = require "skynet.service"
-            local worker_service = require "mongo.worker"
+            local worker_service = require "west.mongo.worker"
 
             local wrokers = {}
             local idx = 0
