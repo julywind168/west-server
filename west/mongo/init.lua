@@ -54,8 +54,9 @@ function mongo:update(...)
     return self.request(self.service_addr, "lua", "update", ...)
 end
 
-function mongo:update_or_insert(...)
-    return self.request(self.service_addr, "lua", "update_or_insert", ...)
+-- update or insert one
+function mongo:upsert(...)
+    return self.request(self.service_addr, "lua", "upsert", ...)
 end
 
 ---@class MongoOpts

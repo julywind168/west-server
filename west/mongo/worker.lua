@@ -121,7 +121,7 @@ local function worker_service(name, id)
         return db[coll]:safe_update(query, { ["$set"] = fields })
     end
 
-    function command.update_or_insert(coll, query, fields)
+    function command.upsert(coll, query, fields)
         return db[coll]:safe_update(query, { ["$set"] = fields }, true, false)
     end
 
