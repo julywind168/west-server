@@ -20,6 +20,16 @@ A skynet distributed server template
 
 4. simple service sandbox, 参考 service/simple/ping.lua 即可便捷的更新服务的状态或接口
 
+## 最佳实践 & West API
+1. 业务 service, 请在 simple service 规范下开发
+2. west.spawn(name, sname, ...) 启动一个 sname (service/simple/?.lua) 的 simple 服务 并命名为 name
+    * name: string, 需要在本地节点内唯一, 比如 "room_mgr", "room.100001", "room.100002", ...
+3. west.call(name, ...) 底层调用 skynet.call(name, "lua", ...) | cluster(node, service, ...)
+4. west.send(name, ...) 底层调用 skynet.send(name, "lua", ...) | cluster(node, service, ...)
+5. west.self() 获取当前 simple 服务的名字, 根据是否启动了集群 返回类似 "node1@room_mgr" | "room_mgr"
+6. 通过 simple service 和 west api, 抹平了 集群和单机模式的差异
+7. simple service 支持一流的 hotfix, 只需要将状态都挂接在 service self 中即可 (见 service/simple/ping.lua 和下面的 Test Hotfix 章节)
+
 ## Install
 1. rust
 2. rlwrap

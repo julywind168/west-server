@@ -14,7 +14,7 @@ end
 
 -- fullname: node@name | name
 function west.call(fullname, ...)
-    local node, name = fullname:match "^(%w+)@(%w+)$"; name = name or fullname;
+    local node, name = fullname:match "^(%w+)@(.+)$"; name = name or fullname;
     if node == nodename then
         return skynet.call(name, "lua", ...)
     else
@@ -23,7 +23,7 @@ function west.call(fullname, ...)
 end
 
 function west.send(fullname, ...)
-    local node, name = fullname:match "^(%w+)@(%w+)$"; name = name or fullname;
+    local node, name = fullname:match "^(%w+)@(.+)$"; name = name or fullname;
     if node == nodename then
         return skynet.send(name, "lua", ...)
     else
