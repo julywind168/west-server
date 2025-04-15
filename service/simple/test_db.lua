@@ -1,7 +1,7 @@
 local west = require "west"
 local log = require "west.log"
 local mongo = require "west.mongo".init{name = "game"}
-local redis = require "west.redis".init{name = "game"}
+local redis = require "west.redis".init("game")
 
 
 local test = {}

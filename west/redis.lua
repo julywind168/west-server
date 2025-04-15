@@ -1,33 +1,23 @@
 local skynet = require "skynet"
 local service = require "skynet.service"
 
-local redis = {}; redis.__index = redis
+local redis = {}
 
--- calles
-function redis:get(key)
-    return skynet.call(self.service_addr, "lua", "get", key)
+function redis.__index(self, key)
+    return function (first, ...)
+        if first == self then
+            return skynet.call(self.service_addr, "lua", key, ...)
+        else
+            return skynet.call(self.service_addr, "lua", key, first, ...)
+        end
+    end
 end
 
--- requestes
-function redis:set(key, value)
-    return self.request(self.service_addr, "lua", "set", key, value)
-end
-
-function redis:del(key)
-    return self.request(self.service_addr, "lua", "del", key)
-end
-
-
----@class RedisOpts
----@field name string
----@field async boolean?
-
----@param opts RedisOpts
+---@param name string
 ---@return self
-function redis.init(opts)
+function redis.init(name)
     local self = {
-        name = assert(opts.name),
-        request = opts.async and skynet.send or skynet.call
+        name = assert(name),
     }
     skynet.init(function ()
         local function redis_service(name)
@@ -40,27 +30,13 @@ function redis.init(opts)
                 db = redis.connect(conf)
             end
 
-            local command = {}
-
-            function command.get(key)
-                return db:get(key)
-            end
-
-            function command.set(key, value)
-                return db:set(key, value)
-            end
-
-            function command.del(key)
-                return db:del(key)
-            end
-
             skynet.start(function()
                 skynet.dispatch("lua", function(session, source, cmd, ...)
-                    local f = assert(command[cmd])
+                    local f = db[cmd]
                     if session ~= 0 then
-                        skynet.ret(skynet.pack(f(...)))
+                        skynet.ret(skynet.pack(f(db, ...)))
                     else
-                        f(...)
+                        f(db, ...)
                     end
                 end)
                 init()
