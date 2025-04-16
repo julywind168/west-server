@@ -5,11 +5,8 @@ local redis = {}
 
 function redis.__index(self, key)
     return function (first, ...)
-        if first == self then
-            return skynet.call(self.service_addr, "lua", key, ...)
-        else
-            return skynet.call(self.service_addr, "lua", key, first, ...)
-        end
+        assert(first == self, "useage: redis:foo(...) style")
+        return skynet.call(self.service_addr, "lua", key, first, ...)
     end
 end
 
