@@ -9,13 +9,15 @@ A skynet distributed server template
 2. 使用 rust 来编写 native lua libs
     * 统一的编译的方式, 告别 各种 c/cpp 乱七八糟的 Makefile
     * rust 更安全, 生态强大
-    * 逐步添加各种实用的 libs, 比如 json, uuid, ring ...
+    * 逐步添加各种实用的 libs, 比如 json, uuid, ...
 
 3. 通用的 skynet lua libs 
     * log: 日志库
     * mongo: 支持连接池, 支持 mongo empty array
+    * redis: redis lib
+    * sqlx: mysql lib
     * echo: golang echo 风格的 web 框架
-    * list: 函数式风格 table 扩展
+    * list/dict: 函数式风格 table 扩展
     * ...
 
 4. simple service sandbox, 参考 service/simple/ping.lua 即可便捷的更新服务的状态或接口
