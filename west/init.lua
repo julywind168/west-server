@@ -46,4 +46,8 @@ function west.self()
     return west.name
 end
 
+function west.stop()
+    skynet.exit()
+end
+
 return west

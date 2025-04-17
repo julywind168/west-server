@@ -15,6 +15,11 @@ function test:started()
 
     redis:set("hello", "redis!")
     log.info("hello", redis:get("hello"))
+    west.stop()
+end
+
+function test:stopped()
+    log.info("stopped")
 end
 
 return test
