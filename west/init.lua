@@ -13,7 +13,6 @@ skynet.register_protocol {
 local west = {
     name = ""
 }
-local callback = {}
 
 function west.new(sname)
     return skynet.newservice("simple", sname)
@@ -62,6 +61,8 @@ function west.init(name)
     end
     skynet.register(name)
 end
+
+local callback = {}
 
 --- register simple service lifecycle handler
 ---@param event 'started' | 'stopped'

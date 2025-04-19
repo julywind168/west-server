@@ -9,10 +9,10 @@ local command = {}
 local started = false
 function command.start(name, ...)
     if started == false then
+        started = true
         S = require("service.simple." .. service_name)
         west.init(name)
         west.try("started", ...)
-        started = true
     end
 end
 
