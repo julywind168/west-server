@@ -6,11 +6,11 @@ local ping = {
 }
 
 west.on("started", function ()
-    log.info("ping:started")
+    log.info(west.self(), "started")
 end)
 
 west.on("stopped", function ()
-    log.info("ping:stopped")
+    log.info(west.self(), "stopped")
 end)
 
 

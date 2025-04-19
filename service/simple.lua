@@ -1,18 +1,23 @@
 local skynet = require "skynet"
 local west = require "west"
 
-local name = assert(...)
-local S = require("service.simple." .. name)
+local service_name = assert(...)
+local S
 
 local command = {}
 
 local started = false
 function command.start(name, ...)
     if started == false then
+        S = require("service.simple." .. service_name)
         west.init(name)
         west.try("started", ...)
         started = true
     end
+end
+
+function command.exit()
+    west.stop()
 end
 
 skynet.start(function()

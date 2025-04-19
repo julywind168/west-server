@@ -4,6 +4,7 @@ local json = require "json"
 local log = require "west.log"
 local echo = require "west.echo"
 local west = require "west"
+local calc_pool = require "west.pool".init { name = "calc", init_size = 5, max_size = 6 }
 local middleware = require "west.echo.middleware"
 local distributed = skynet.getenv "nodename" ~= nil
 
@@ -47,6 +48,21 @@ west.on("started", function()
             west.send(ping, "ping")
         end
     end)
+
+    -- test pool
+    log.info("calc_pool size", calc_pool:size())
+
+    local calces = calc_pool:get_many(4)
+    for i, addr in ipairs(calces) do
+        calces[i] = west.start(addr, "calc." .. i)
+    end
+
+    for i, calc in ipairs(calces) do
+        west.send(calc, "exit")
+    end
+
+    skynet.sleep(100)
+    log.info("calc_pool size", calc_pool:size())
 end)
 
 return {}

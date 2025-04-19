@@ -19,13 +19,18 @@ function west.new(sname)
     return skynet.newservice("simple", sname)
 end
 
-function west.start(service, name, ...)
-    skynet.call(service, "west", "start", name, ...)
+---start a simple service
+---@param service_addr number skynet service address (from west.new(sname))
+---@param name string service unique name
+---@param ... any
+---@return string service west simple service
+function west.start(service_addr, name, ...)
+    skynet.call(service_addr, "west", "start", name, ...)
+    return nodename and nodename.."@"..name or name
 end
 
 function west.spawn(name, sname, ...)
-    west.start(west.new(sname), name, ...)
-    return nodename and nodename.."@"..name or name
+    return west.start(west.new(sname), name, ...)
 end
 
 -- fullname: node@name | name
