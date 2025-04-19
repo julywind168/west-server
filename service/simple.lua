@@ -1,25 +1,32 @@
 local skynet = require "skynet"
 local west = require "west"
-local skynet_exit = skynet.exit
 
+local name = assert(...)
+local S = require("service.simple." .. name)
 
-local args = { ... }
-local S = require("service.simple." .. args[1])
+local command = {}
 
-local function try(name, ...)
-    local f = S[name]
-    if f then
-        return f(S, ...)
+local started = false
+function command.start(name, ...)
+    if started == false then
+        west.init(name)
+        west.try("started", ...)
+        started = true
     end
 end
 
-function skynet.exit()
-    try("stopped")
-    skynet_exit()
-end
-
 skynet.start(function()
+    skynet.dispatch("west", function(session, address, cmd, ...)
+        local f = assert(command[cmd], cmd)
+        if session ~= 0 then
+            skynet.ret(skynet.pack(f(...)))
+        else
+            f(...)
+        end
+    end)
+
     skynet.dispatch("lua", function(session, address, cmd, ...)
+        assert(started, "service not started")
         local f = assert(S[cmd], cmd)
         if session ~= 0 then
             skynet.ret(skynet.pack(f(S, ...)))
@@ -27,6 +34,4 @@ skynet.start(function()
             f(S, ...)
         end
     end)
-    west.init(args[2]) -- set self name
-    try("started", table.unpack(args, 3))
 end)

@@ -1,15 +1,18 @@
+local west = require "west"
 local log = require "west.log"
 
 local ping = {
     count = 0
 }
 
-function ping:started()
+west.on("started", function ()
     log.info("ping:started")
-end
+end)
 
-function ping:stopped()
-end
+west.on("stopped", function ()
+    log.info("ping:stopped")
+end)
+
 
 function ping:ping()
     self.count = self.count + 1
