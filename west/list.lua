@@ -99,14 +99,6 @@ function list.length(t)
 end
 
 function list.copy(t)
-    local result = {}
-    for _, v in ipairs(t) do
-        table.insert(result, v)
-    end
-    return result
-end
-
-function list.deepcopy(t)
     local function copy(orig)
         if type(orig) ~= "table" then
             return orig
