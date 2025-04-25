@@ -4,6 +4,7 @@ local json = require "json"
 local log = require "west.log"
 local echo = require "west.echo"
 local west = require "west"
+local mq = require "west.mq"
 local calc_pool = require "west.pool".init { name = "calc", init_size = 5, max_size = 6 }
 local middleware = require "west.echo.middleware"
 local distributed = skynet.getenv "nodename" ~= nil
@@ -63,6 +64,10 @@ west.on("started", function()
 
     skynet.sleep(100)
     log.info("calc_pool size", calc_pool:size())
+
+    -- test mq
+    skynet.sleep(100)
+    mq:pub("test-started", "welcome to west")
 end)
 
 return {}

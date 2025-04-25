@@ -20,7 +20,7 @@ end
 
 ---start a simple service
 ---@param service_addr number skynet service address (from west.new(sname))
----@param name string service unique name
+---@param name string service unique name (in self node)
 ---@param ... any
 ---@return string service west simple service
 function west.start(service_addr, name, ...)
