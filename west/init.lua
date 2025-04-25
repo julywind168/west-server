@@ -55,7 +55,6 @@ function west.init(name)
     if nodename then
         assert(nodename ~= "", "invalid empty nodename")
         west.name = nodename.."@"..name
-        cluster.register(name)
     else
         west.name = name
     end
