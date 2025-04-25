@@ -39,6 +39,28 @@ local function new_channel(id)
         end
     end
 
+    function self.sub_once(callback)
+        local s = {}
+        s.cancel = self.sub(function(...)
+            s.cancel()
+            callback(...)
+        end)
+        return s.cancel
+    end
+
+    function self.sub_many(callback, n)
+        local s = {}
+        local count = 0
+        s.cancel = self.sub(function(...)
+            count = count + 1
+            if count >= n then
+                s.cancel()
+            end
+            callback(...)
+        end)
+        return s.cancel
+    end
+
     function self.pub(...)
         channel:publish(...)
     end
@@ -60,6 +82,16 @@ end
 function mq:sub(ch_name, f)
     self.channels[ch_name] = self.channels[ch_name] or new_channel(self:channel_id(ch_name))
     return self.channels[ch_name].sub(f)
+end
+
+function mq:sub_once(ch_name, f)
+    self.channels[ch_name] = self.channels[ch_name] or new_channel(self:channel_id(ch_name))
+    return self.channels[ch_name].sub_once(f)
+end
+
+function mq:sub_many(ch_name, f, n)
+    self.channels[ch_name] = self.channels[ch_name] or new_channel(self:channel_id(ch_name))
+    return self.channels[ch_name].sub_many(f, n)
 end
 
 function mq:delete(ch_name)

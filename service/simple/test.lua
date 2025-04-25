@@ -68,6 +68,7 @@ west.on("started", function()
     -- test mq
     skynet.sleep(100)
     mq:pub("test-started", "welcome to west")
+    mq:pub("test-started", "welcome to west 2")
 end)
 
 return {}
