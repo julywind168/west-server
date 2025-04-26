@@ -15,6 +15,7 @@ A skynet distributed server template
 
 4. 通用的 skynet lua libs 
     * west.log: 日志库 (按每日分割)
+    * west.timer: 定时器
     * west.mq: 跨节点的 消息队列 (pub/sub)
     * west.mongo: 支持连接池, 支持 mongo empty array
     * west.redis: redis lib

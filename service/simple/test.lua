@@ -5,6 +5,7 @@ local log = require "west.log"
 local echo = require "west.echo"
 local west = require "west"
 local mq = require "west.mq"
+local timer = require "west.timer"
 local calc_pool = require "west.pool".init { name = "calc", init_size = 5, max_size = 6 }
 local middleware = require "west.echo.middleware"
 local distributed = skynet.getenv "nodename" ~= nil
@@ -69,6 +70,22 @@ west.on("started", function()
     skynet.sleep(100)
     mq:pub("test-started", "welcome to west")
     mq:pub("test-started", "welcome to west 2")
+
+    -- test timer
+    timer.once(50, function()
+        log.debug("timer once")
+    end)
+
+    local id
+    local count = 0
+    id = timer.loop(50, function()
+        count = count + 1
+        log.debug("timer every ", count)
+        if count >= 3 then
+            timer.cancel(id)
+            log.warn("timer cancel", id)
+        end
+    end)
 end)
 
 return {}
