@@ -73,9 +73,9 @@ local mq = { channels = {} }; mq.__index = mq
 
 function mq:pub(ch_name, ...)
     self.channels[ch_name] = self.channels[ch_name] or new_channel(self:channel_id(ch_name))
-    self.channels[ch_name].pub(west.self(), ...)
+    self.channels[ch_name].pub(...)
     if distributed then
-        skynet.send(self.service_addr, "lua", "broadcast", west.self(), ch_name, ...)
+        skynet.send(self.service_addr, "lua", "broadcast", ch_name, ...)
     end
 end
 
@@ -129,18 +129,18 @@ skynet.init(function()
         end
 
         -- broadcast to all nodes
-        function command.broadcast(source, ch_name, ...)
+        function command.broadcast(ch_name, ...)
             for _, node in ipairs(nodelist) do
                 if node ~= nodename then
-                    cluster.send(node, "mq", "message", source, ch_name, ...)
+                    cluster.send(node, "mq", "message", ch_name, ...)
                 end
             end
         end
 
         -- message from other nodes
-        function command.message(source, ch_name, ...)
+        function command.message(ch_name, ...)
             if channel[ch_name] then
-                channel[ch_name]:publish(source, ...)
+                channel[ch_name]:publish(...)
             end
         end
 

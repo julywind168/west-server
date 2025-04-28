@@ -8,8 +8,8 @@ local ping = {
 
 west.on("started", function ()
     log.info(west.self(), "started")
-    mq:sub_once("test-started", function (src, ...)
-        log.info("ping: get test-started,", ("[%s]:"):format(src), ...)
+    mq:sub_once("test-started", function (...)
+        log.info("ping: get test-started,", ...)
     end)
 end)
 
