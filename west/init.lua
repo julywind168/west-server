@@ -83,8 +83,10 @@ function west.self()
 end
 
 function west.stop()
-    west.try("stopped")
-    skynet.exit()
+    skynet.fork(function ()
+        west.try("stopped")
+        skynet.exit()
+    end)
 end
 
 return west
