@@ -6,7 +6,14 @@ local function worker_service(name, id)
     local client, db
 
     local function init_indexes()
-        for coll, idxs in pairs(conf.indexes or {}) do
+        local indexes = require(string.format("config.mongo-%s-indexes", name))
+        if type(indexes) ~= "table" then
+            skynet.error(
+                ("you mabye forget to create config/mongo-%s-indexes.lua!"):format(name)
+            )
+            return
+        end
+        for coll, idxs in pairs(indexes) do
             for i, idx in ipairs(idxs) do
                 db[coll]:createIndex(idx)
             end
@@ -117,7 +124,7 @@ local function worker_service(name, id)
     end
 
     -- Ex
-    function command.update(coll, query, fields)
+    function command.set(coll, query, fields)
         return db[coll]:safe_update(query, { ["$set"] = fields })
     end
 

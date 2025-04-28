@@ -16,6 +16,10 @@ skynet.pid
 config/mongo-*.lua
 !config/mongo-game-sample.lua
 
+# Add your mongo indexes config here
+!config/mongo-game-indexes-sample.lua
+!config/mongo-game-indexes.lua
+
 config/redis-*.lua
 !config/redis-game-sample.lua
 

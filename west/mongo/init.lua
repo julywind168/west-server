@@ -3,12 +3,13 @@ local service = require "skynet.service"
 
 local mongo = {}; mongo.__index = mongo
 
-function mongo.newarray(t)
+function mongo.array(t)
     t = t or {}
     t.__array = true
     return t
 end
 
+-- use skynet.call
 function mongo:find_one(...)
     return skynet.call(self.service_addr, "lua", "find_one", ...)
 end
@@ -25,43 +26,73 @@ function mongo:sum(...)
     return skynet.call(self.service_addr, "lua", "sum", ...)
 end
 
--- use self.request
 function mongo:insert_one(...)
-    return self.request(self.service_addr, "lua", "insert_one", ...)
+    return skynet.call(self.service_addr, "lua", "insert_one", ...)
 end
 
 function mongo:insert_many(...)
-    return self.request(self.service_addr, "lua", "insert_many", ...)
+    return skynet.call(self.service_addr, "lua", "insert_many", ...)
 end
 
 function mongo:update_one(...)
-    return self.request(self.service_addr, "lua", "update_one", ...)
+    return skynet.call(self.service_addr, "lua", "update_one", ...)
 end
 
 function mongo:update_many(...)
-    return self.request(self.service_addr, "lua", "update_many", ...)
+    return skynet.call(self.service_addr, "lua", "update_many", ...)
 end
 
 function mongo:delete_one(...)
-    return self.request(self.service_addr, "lua", "delete_one", ...)
+    return skynet.call(self.service_addr, "lua", "delete_one", ...)
 end
 
 function mongo:delete_many(...)
-    return self.request(self.service_addr, "lua", "delete_many", ...)
+    return skynet.call(self.service_addr, "lua", "delete_many", ...)
 end
 
-function mongo:update(...)
-    return self.request(self.service_addr, "lua", "update", ...)
+function mongo:set(...)
+    return skynet.call(self.service_addr, "lua", "set", ...)
 end
 
--- update or insert one
 function mongo:upsert(...)
-    return self.request(self.service_addr, "lua", "upsert", ...)
+    return skynet.call(self.service_addr, "lua", "upsert", ...)
+end
+
+-- use skynet.send
+function mongo:insert_one_async(...)
+    skynet.send(self.service_addr, "lua", "insert_one", ...)
+end
+
+function mongo:insert_many_async(...)
+    skynet.send(self.service_addr, "lua", "insert_many", ...)
+end
+
+function mongo:update_one_async(...)
+    skynet.send(self.service_addr, "lua", "update_one", ...)
+end
+
+function mongo:update_many_async(...)
+    skynet.send(self.service_addr, "lua", "update_many", ...)
+end
+
+function mongo:delete_one_async(...)
+    skynet.send(self.service_addr, "lua", "delete_one", ...)
+end
+
+function mongo:delete_many_async(...)
+    skynet.send(self.service_addr, "lua", "delete_many", ...)
+end
+
+function mongo:set_async(...)
+    skynet.send(self.service_addr, "lua", "set", ...)
+end
+
+function mongo:upsert_async(...)
+    skynet.send(self.service_addr, "lua", "upsert", ...)
 end
 
 ---@class MongoOpts
 ---@field name string
----@field async boolean?
 ---@field poolsize number?
 
 ---@param opts MongoOpts
@@ -69,7 +100,6 @@ end
 function mongo.init(opts)
     local self = {
         name = assert(opts.name),
-        request = opts.async and skynet.send or skynet.call,
         poolsize = opts.poolsize or 1,
     }
 

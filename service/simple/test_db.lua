@@ -1,25 +1,20 @@
 local west = require "west"
 local log = require "west.log"
-local mongo = require "west.mongo".init{name = "game"}
+local mongo = require "west.mongo".init { name = "game" }
 local redis = require "west.redis".init("game")
 
 
-local test = {}
-
-function test:started()
+west.on("started", function()
     -- test empty array
     mongo:insert_one("users", {
         id = os.time(),
-        backpack = mongo.newarray()
+        backpack = mongo.array()
     })
 
     redis:set("hello", "redis!")
     log.info("hello", redis:get("hello"))
     west.stop()
-end
+end)
 
-function test:stopped()
-    log.info("stopped")
-end
 
-return test
+return {}
