@@ -1,4 +1,5 @@
 local skynet = require "skynet"
+local lettre = require "lettre"
 local uuid = require "uuid"
 local json = require "json"
 local log = require "west.log"
@@ -86,6 +87,19 @@ west.on("started", function()
             log.warn("timer cancel", id)
         end
     end)
+
+    -- test lettre to send mail
+    -- smtp_server: "smtp.gmail.com" | "smtp.qq.com" | ...
+    --[[
+        local mailer = lettre.mailer("smtp_server", "smtp_username", "smtp_password")
+        mailer:send_text{
+            from = "me@gmail.com",
+            to = "who@gmail.com",
+            subject = "Happy new year",
+            body = "Be happy!"
+        }
+        log.info("email sent")
+    ]]
 end)
 
 return {}

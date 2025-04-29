@@ -24,6 +24,7 @@ elif [ "$action" = "libs" ]; then
     cd bin
     ln -sf ../target/release/libjson.dylib ./json.so
     ln -sf ../target/release/libuuid.dylib ./uuid.so
+    ln -sf ../target/release/liblettre.dylib ./lettre.so
     cd ../..
     echo "done"
 else
