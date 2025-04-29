@@ -12,6 +12,7 @@ A skynet distributed server template
     * 统一的编译的方式, 告别 各种 c/cpp 乱七八糟的 Makefile
     * rust 更安全, 生态强大
     * 逐步添加各种实用的 libs, 比如 json, uuid, ...
+    * lettre: 邮件发送
 
 4. 通用的 skynet lua libs 
     * west.log: 日志库 (按每日分割)
