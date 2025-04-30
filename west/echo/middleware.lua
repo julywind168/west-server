@@ -46,6 +46,20 @@ local function cors_with_config(config)
     end
 end
 
+-- header: Authorization: key
+local function key_auth(uri_prefix, key)
+    return function(next)
+        return function(ctx)
+            local auth = ctx.request.header["authorization"]
+            if ctx.uri:sub(1, #uri_prefix) == uri_prefix and auth ~= key then
+                return ctx.string(http.StatusUnauthorized, "Unauthorized")
+            end
+            return next(ctx)
+        end
+    end
+end
+
 return {
-    cors_with_config = cors_with_config
+    cors_with_config = cors_with_config,
+    key_auth = key_auth
 }

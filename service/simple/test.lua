@@ -23,6 +23,9 @@ west.on("started", function()
     -- test echo
     local e = echo.new()
 
+    -- protected '/user/*' route
+    e.use(middleware.key_auth("/user/", "west"))
+
     e.use(middleware.cors_with_config({
         allow_origins = { "*" },
         allow_methods = { "*" },

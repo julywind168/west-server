@@ -142,16 +142,16 @@ function echo.new()
         end
         method = method:lower()
 
-        local path, query = urllib.parse(url)
+        local uri, query = urllib.parse(url)
         query = query and urllib.parse_query(query) or {}
 
         if not handle[method] then
             skynet.error(string.format("method %s not allowed", method))
             return ret(http.StatusMethodNotAllowed)
         end
-        local cb = handle[method][path]
+        local cb = handle[method][uri]
         if not cb then
-            skynet.error(string.format("path %s not found", path))
+            skynet.error(string.format("uri:%s handle not found", uri))
             return ret(http.StatusNotFound)
         end
 
@@ -159,7 +159,7 @@ function echo.new()
             request = {
                 addr = addr,
                 method = method,
-                path = path,
+                uri = uri,
                 query = query,
                 header = header,
                 body = body,
@@ -187,8 +187,8 @@ function echo.new()
             c.response.body = json.encode(rbody)
             c.response.header["content-type"] = "application/json"
         end
-
         -- TODO: add more response type
+
         local handler = chain_middleware(cb)
         local ok, r = pcall(handler, c)
         if ok then
@@ -202,7 +202,7 @@ function echo.new()
                 end
             end
         else
-            skynet.error(string.format('Handle method: "%s", path: "%s", client: "%s" error: %s', method, path, addr, r))
+            skynet.error(string.format('Handle method: "%s", uri: "%s", client: "%s" error: %s', method, uri, addr, r))
             return ret(http.StatusInternalServerError)
         end
         c.response.header["date"] = format_http_date()
