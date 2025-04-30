@@ -16,18 +16,19 @@ impl LuaUserData for LuaMailer {
             let subject: String = params.get("subject").map_err(LuaError::external)?;
             let body: String = params.get("body").map_err(LuaError::external)?;
 
-            let email = Message::builder()
+            let mut email_builder = Message::builder()
                 .from(from.parse().map_err(LuaError::external)?)
-                .reply_to(
-                    reply_to
-                        .as_deref()
-                        .unwrap_or(&from)
-                        .parse()
-                        .map_err(LuaError::external)?,
-                )
                 .to(to.parse().map_err(LuaError::external)?)
                 .subject(subject)
-                .header(ContentType::TEXT_PLAIN)
+                .header(ContentType::TEXT_PLAIN);
+
+            if let Some(reply_to) = reply_to {
+                email_builder = email_builder.reply_to(
+                    reply_to.parse().map_err(LuaError::external)?,
+                );
+            }
+
+            let email = email_builder
                 .body(body)
                 .map_err(LuaError::external)?;
 
