@@ -19,7 +19,7 @@ skynet.init(function ()
         local nodes = require "config.nodes"
         local nodename = skynet.getenv("nodename")
 
-        local id = 1
+        local id = 0
         if nodename then
             local node = nodes[nodename]
             id = assert(node and node.id)
