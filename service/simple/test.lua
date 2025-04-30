@@ -10,6 +10,7 @@ local timer = require "west.timer"
 local calc_pool = require "west.pool".init { name = "calc", init_size = 5, max_size = 6 }
 local middleware = require "west.echo.middleware"
 local distributed = skynet.getenv "nodename" ~= nil
+local snowid = require "west.snowid"
 
 
 west.on("started", function()
@@ -103,6 +104,11 @@ west.on("started", function()
         }
         log.info("email sent")
     ]]
+
+    -- test snowid
+    for i = 1, 5 do
+        log.info("test snowid", snowid.int())
+    end
 end)
 
 return {}

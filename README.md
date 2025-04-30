@@ -23,6 +23,7 @@ A skynet distributed server template
     * west.sqlx: mysql lib
     * west.echo: golang echo 风格的 web 框架
     * west.pool: service pool (simple service 在 vm 实例化时不会加载对应的业务代码, 所以在 clearcache 时, 无需清空 pool)
+    * west.snowid: snowflake id 生成器
     * west.list/dict: 函数式编程风格 table 扩展
     * ...
 

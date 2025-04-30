@@ -6,9 +6,11 @@ return {
     },
     -- nodes
     main = {
+        id = 1,
         debug_port = 8000
     },
     ping = {
+        id = 2,
         debug_port = 8001
     },
 }
