@@ -145,15 +145,13 @@ function echo.new()
         local uri, query = urllib.parse(url)
         query = query and urllib.parse_query(query) or {}
 
-        if not handle[method] then
-            skynet.error(string.format("method %s not allowed", method))
-            return ret(http.StatusMethodNotAllowed)
+        local function default_handler(c)
+            local status = handle[method] and http.StatusNotFound or http.StatusMethodNotAllowed
+            local msg = status == http.StatusNotFound and "Not Found" or "Method Not Allowed"
+            return c.string(status, msg)
         end
-        local cb = handle[method][uri]
-        if not cb then
-            skynet.error(string.format("uri:%s handle not found", uri))
-            return ret(http.StatusNotFound)
-        end
+
+        local cb = handle[method] and handle[method][uri] or default_handler
 
         local c = {
             request = {

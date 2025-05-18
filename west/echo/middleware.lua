@@ -35,7 +35,7 @@ local function cors_with_config(config)
             if request.method == "options" then
                 response.header["access-control-allow-methods"] = table.concat(config.allow_methods, ",")
                 response.header["access-control-allow-headers"] = table.concat(config.allow_headers, ",")
-                if config.max_age > 0 then
+                if config.max_age and config.max_age > 0 then
                     response.header["access-control-max-age"] = tostring(config.max_age)
                 end
                 return ctx.string(http.StatusNoContent, "")
