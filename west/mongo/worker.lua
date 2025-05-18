@@ -8,9 +8,7 @@ local function worker_service(name, id)
     local function init_indexes()
         local indexes = require(string.format("config.mongo-%s-indexes", name))
         if type(indexes) ~= "table" then
-            skynet.error(
-                ("you mabye forget to create config/mongo-%s-indexes.lua!"):format(name)
-            )
+            skynet.error(("you mabye forget to create config/mongo-%s-indexes.lua!"):format(name))
             return
         end
         for coll, idxs in pairs(indexes) do
@@ -44,7 +42,6 @@ local function worker_service(name, id)
     local function init()
         client = mongo.client(conf.conf)
         db = client[conf.db_name]
-        skynet.error(string.format("connect %s success!", tostring(db)))
         if id == 1 then
             init_indexes()
         end
