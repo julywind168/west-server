@@ -1,6 +1,8 @@
 # west-server
 A skynet distributed server template
 
+[基于 west-server 的全球服架构设计参考](https://excalidraw.com/#json=51Qia2uo2G273bj9kjQV1,kFNvtRjdBGGNGaQ3JwGKWg)
+
 ## Features
 1. 一流的 hotfix, 参考 service/simple/ping.lua 即可便捷的更新服务的状态或接口。
 
