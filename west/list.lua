@@ -17,13 +17,27 @@ function list.indexof(t, value)
     return nil
 end
 
--- Find a value in a list
+--- Find a value in a list
+---@param t table
+---@param predicate function
+---@return any? value
+---@return integer? idx
 function list.find(t, predicate)
     for i, v in ipairs(t) do
         if predicate(v) then
-            return i, v
+            return v, i
         end
     end
+end
+
+function list.count(t, f)
+    local count = 0
+    for _, v in ipairs(t) do
+        if f(v) then
+            count = count + 1
+        end
+    end
+    return count
 end
 
 -- Map function over a list

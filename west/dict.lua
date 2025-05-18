@@ -1,5 +1,13 @@
 local dict = {}
 
+function dict.merge(t, t2)
+    local r = dict.copy(t)
+    for k, v in pairs(dict.copy(t2)) do
+        r[k] = v
+    end
+    return r
+end
+
 -- 从键值对列表{{k, v}, ...} 创建字典
 function dict.from_list(pairs)
     local result = {}
